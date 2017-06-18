@@ -1,5 +1,4 @@
 from __future__ import print_function
-import six
 import re
 import numpy as np
 import pickle
