@@ -48,7 +48,7 @@ class LtrIterator(iterator.Iterator):
             if self._shuffle:
                 self._shuffle_indices()
 
-        return [(self.feature_vectors[i, :], self.relevance_scores[i, None]) for
+        return [(self.feature_vectors[i, :], self.relevance_scores[i]) for
                 i in range(start, end)]
 
     def _shuffle_indices(self):
