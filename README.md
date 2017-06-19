@@ -5,6 +5,10 @@
 
 Shoelace is a neural Learning to Rank library using [Chainer](https://github.com/chainer/chainer). The goal is to make it easy to do offline learning to rank experiments on annotated learning to rank data.
 
+## Installation
+
+    pip install shoelace
+
 ## Features
 
 ### Dataset loading facilities
