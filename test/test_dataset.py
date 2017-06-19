@@ -4,7 +4,7 @@ import numpy as np
 from nose.tools import raises, assert_equal, assert_in, assert_not_equal, \
     assert_true
 
-from lace.dataset import LtrDataset
+from shoelace.dataset import LtrDataset
 from test.utils import get_dataset
 
 

@@ -10,7 +10,7 @@ install:
  - pip install nose coverage coveralls
 
 script:
- nosetests -v test --with-coverage --cover-package=lace
+ nosetests -v test --with-coverage --cover-package=shoelace
 
 after_success:
   coveralls

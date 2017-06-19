@@ -3,7 +3,7 @@ from chainer.dataset.iterator import Iterator
 from chainer.serializers import DictionarySerializer
 from nose.tools import raises, assert_equal, assert_true, assert_not_equal
 
-from lace.iterator import LtrIterator
+from shoelace.iterator import LtrIterator
 from test.utils import get_dataset
 
 

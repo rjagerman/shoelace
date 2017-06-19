@@ -2,7 +2,7 @@ import numpy as np
 import chainer
 import chainer.functions as F
 from chainer import Chain, cuda
-from lace.functions.logcumsumexp import logcumsumexp
+from shoelace.functions.logcumsumexp import logcumsumexp
 
 
 class AbstractListLoss(Chain):
@@ -16,13 +16,12 @@ class AbstractListLoss(Chain):
     def __init__(self, predictor):
         super(AbstractListLoss, self).__init__(predictor=predictor)
 
-    def __call__(self, x: chainer.variable.Variable,
-                 t: chainer.variable.Variable):
+    def __call__(self, x, t):
         x_hat = self.predictor(x)
         loss = self.loss(x_hat, t)
         return loss
 
-    def loss(self, x: chainer.variable.Variable, t: chainer.variable.Variable):
+    def loss(self, x, t):
         raise NotImplementedError
 
 

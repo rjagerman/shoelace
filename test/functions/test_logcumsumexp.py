@@ -1,6 +1,6 @@
 import numpy as np
 from nose.tools import assert_equal, assert_true
-from lace.functions.logcumsumexp import logcumsumexp, LogCumsumExp
+from shoelace.functions.logcumsumexp import logcumsumexp, LogCumsumExp
 from chainer import Variable
 
 

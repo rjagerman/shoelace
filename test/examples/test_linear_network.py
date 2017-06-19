@@ -3,8 +3,8 @@ from chainer import training, optimizers, links
 from chainer.dataset import convert
 from nose.tools import assert_almost_equal
 
-from lace.iterator import LtrIterator
-from lace.loss.listwise import ListNetLoss
+from shoelace.iterator import LtrIterator
+from shoelace.loss.listwise import ListNetLoss
 from test.utils import get_dataset
 
 

@@ -1,9 +1,9 @@
-# [![Lace](https://github.com/rjagerman/lace/wiki/img/logo.png)](https://github.com/rjagerman/lace)
+# [![Shoelace](https://github.com/rjagerman/shoelace/wiki/img/logo.png)](https://github.com/rjagerman/shoelace)
 
-[![Build Status](https://travis-ci.org/rjagerman/lace.svg?branch=master)](https://travis-ci.org/rjagerman/lace)
-[![Coverage Status](https://coveralls.io/repos/github/rjagerman/lace/badge.svg?branch=master)](https://coveralls.io/github/rjagerman/lace?branch=master)
+[![Build Status](https://travis-ci.org/rjagerman/shoelace.svg?branch=master)](https://travis-ci.org/rjagerman/shoelace)
+[![Coverage Status](https://coveralls.io/repos/github/rjagerman/shoelace/badge.svg?branch=master)](https://coveralls.io/github/rjagerman/shoelace?branch=master)
 
-Lace is a neural Learning to Rank library using [Chainer](https://github.com/chainer/chainer). The goal is to make it easy to do offline learning to rank experiments on annotated learning to rank data.
+Shoelace is a neural Learning to Rank library using [Chainer](https://github.com/chainer/chainer). The goal is to make it easy to do offline learning to rank experiments on annotated learning to rank data.
 
 ## Features
 
@@ -11,14 +11,14 @@ Lace is a neural Learning to Rank library using [Chainer](https://github.com/cha
 
 We currently provide ability to load learning to rank datasets (SVMRank format) into chainer.
 
-    from lace.dataset.dataset import LtrDataset
+    from shoelace.dataset.dataset import LtrDataset
     
     with open('./dataset.txt', 'r') as file:
         dataset = LtrDataset.load_txt(file)
         
 Additionally, we provide minibatch iterators for Learning to Rank datasets. These generate variable-sized minibatches, where each minibatch represents one query and all associated query-document instances. You can additionally specify whether the iterator should repeat infinitely and/or shuffle the data on every epoch.
 
-    from lace.dataset.iterator import LtrIterator
+    from shoelace.dataset.iterator import LtrIterator
     
     iterator = LtrIterator(dataset, repeat=True, shuffle=True)
 
@@ -26,17 +26,17 @@ Additionally, we provide minibatch iterators for Learning to Rank datasets. Thes
 
 Currently we provide implementations for the following loss functions
 
- * Top-1 ListNet: `lace.loss.listwise.ListNetLoss`
- * ListMLE: `lace.loss.listwise.ListMLELoss`
- * ListPL: `lace.loss.listwise.ListPLLoss`
+ * Top-1 ListNet: `shoelace.loss.listwise.ListNetLoss`
+ * ListMLE: `shoelace.loss.listwise.ListMLELoss`
+ * ListPL: `shoelace.loss.listwise.ListPLLoss`
 
 ## Example
 
 Here is an example script that will train up a single-layer linear neural network with a ListNet loss function:
 
-    from lace.dataset import LtrDataset
-    from lace.iterator import LtrIterator
-    from lace.loss.listwise import ListNetLoss
+    from shoelace.dataset import LtrDataset
+    from shoelace.iterator import LtrIterator
+    from shoelace.loss.listwise import ListNetLoss
     from chainer import training, optimizers, links
     from chainer.training import extensions
     

@@ -7,7 +7,7 @@ class LtrIterator(iterator.Iterator):
     """Dataset iterator that serially reads learning-to-rank examples.
 
     This is an implementation of :class:`~chainer.dataset.Iterator` that visits
-    each query of a :class:`lace.dataset.dataset.LtrDataset` object and
+    each query of a :class:`shoelace.dataset.dataset.LtrDataset` object and
     generates a variable-sized minibatch of the query-document instances for
     that query.
 
@@ -20,8 +20,7 @@ class LtrIterator(iterator.Iterator):
 
     """
 
-    def __init__(self, dataset, repeat: bool = False,
-                 shuffle: bool = True):
+    def __init__(self, dataset, repeat = False, shuffle= True):
         self.feature_vectors = dataset.feature_vectors
         self.query_pointer = dataset.query_pointer
         self.relevance_scores = dataset.relevance_scores.astype(np.float32)
@@ -62,7 +61,7 @@ class LtrIterator(iterator.Iterator):
     def epoch_detail(self):
         return self.epoch + self._current_index / self._nr_of_queries
 
-    def serialize(self, serializer: Serializer):
+    def serialize(self, serializer):
         self.batch_size = serializer('batch_size', self.batch_size)
         self.epoch = serializer('epoch', self.epoch)
         self.previous_epoch_detail = serializer('previous_epoch_detail',

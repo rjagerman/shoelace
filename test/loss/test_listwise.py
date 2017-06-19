@@ -1,7 +1,7 @@
 import numpy as np
 from nose.tools import raises, assert_equal, assert_almost_equal
 from chainer import Variable, Link
-from lace.loss.listwise import ListNetLoss, ListMLELoss, ListPLLoss, \
+from shoelace.loss.listwise import ListNetLoss, ListMLELoss, ListPLLoss, \
     AbstractListLoss
 
 
