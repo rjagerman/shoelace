@@ -11,8 +11,13 @@ setup(
     license='MIT',
     packages=['lace',
               'lace.functions',
-              'lace.loss'],
+              'lace.loss',
+              'test',
+              'test.examples',
+              'test.functions',
+              'test.loss'],
     install_requires=['numpy>=1.12.0',
                       'chainer>=2.0.0'],
+    test_suite='nose.collector',
     tests_require=['nose']
 )
