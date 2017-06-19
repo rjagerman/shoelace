@@ -1,6 +1,7 @@
 # [![Lace](https://github.com/rjagerman/lace/wiki/img/logo.png)](https://github.com/rjagerman/lace)
 
 [![Build Status](https://travis-ci.org/rjagerman/lace.svg?branch=master)](https://travis-ci.org/rjagerman/lace)
+[![Coverage Status](https://coveralls.io/repos/github/rjagerman/lace/badge.svg?branch=master)](https://coveralls.io/github/rjagerman/lace?branch=master)
 
 Lace is a neural Learning to Rank library using [Chainer](https://github.com/chainer/chainer). The goal is to make it easy to do offline learning to rank experiments on annotated learning to rank data.
 
