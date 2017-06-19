@@ -11,5 +11,4 @@ install:
  - pip install coverage
 
 script:
- - nosetests test --coverage
-
+ - nosetests -v test --with-coverage --cover-package=lace --cover-html
