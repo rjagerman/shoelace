@@ -1,10 +1,11 @@
 import numpy as np
-from nose.tools import assert_almost_equal
-from test.dataset.utils import get_dataset
-from lace.dataset.iterator import LtrIterator
-from lace.loss.listwise import ListNetLoss
 from chainer import training, optimizers, links
 from chainer.dataset import convert
+from nose.tools import assert_almost_equal
+
+from lace.iterator import LtrIterator
+from lace.loss.listwise import ListNetLoss
+from test.utils import get_dataset
 
 
 def test_linear_network():

@@ -1,10 +1,11 @@
+from io import StringIO, BytesIO
+
 import numpy as np
 from nose.tools import raises, assert_equal, assert_in, assert_not_equal, \
     assert_true
-from io import StringIO, BytesIO
-from lace.dataset.dataset import LtrDataset
 
-from test.dataset.utils import get_dataset
+from lace.dataset import LtrDataset
+from test.utils import get_dataset
 
 
 def test_save_txt_and_load_txt():

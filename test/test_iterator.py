@@ -1,10 +1,10 @@
 import numpy as np
-from nose.tools import raises, assert_equal, assert_true, assert_not_equal
-from lace.dataset.iterator import LtrIterator
 from chainer.dataset.iterator import Iterator
 from chainer.serializers import DictionarySerializer
+from nose.tools import raises, assert_equal, assert_true, assert_not_equal
 
-from test.dataset.utils import get_dataset
+from lace.iterator import LtrIterator
+from test.utils import get_dataset
 
 
 def test_iterations():
