@@ -58,3 +58,4 @@ Here is an example script that will train up a single-layer linear neural networ
     
     # Train neural network
     trainer.run()
+
