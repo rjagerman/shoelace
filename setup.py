@@ -9,5 +9,9 @@ setup(
     author='Rolf Jagerman',
     author_email='rjagerman@gmail.com',
     license='MIT',
-    packages=['lace']
+    packages=['lace',
+              'lace.functions',
+              'lace.loss'],
+    install_requires=['numpy>=1.12.0', 'chainer>=2.0.0'],
+    tests_require=['nose']
 )
