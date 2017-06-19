@@ -84,17 +84,20 @@ class LtrDataset(DatasetMixin):
 
         # Convert feature vectors, relevance scores and query pointer to correct
         # form
+        query_ids = list(data_set.keys())
+        query_pointer = np.array([len(data_set[query]) for query in data_set])
+        query_pointer = np.cumsum(query_pointer)
+        query_pointer = np.hstack([np.array([0]), query_pointer])
+        nr_of_queries = len(data_set)
         feature_vectors = np.vstack([data_point.feature_vector
                                      for query in data_set
                                      for data_point in data_set[query]])
         relevance_scores = np.vstack([data_point.relevance
                                       for query in data_set
                                       for data_point in data_set[query]])
-        query_ids = list(data_set.keys())
-        query_pointer = np.array([len(data_set[query]) for query in data_set])
-        query_pointer = np.cumsum(query_pointer)
-        query_pointer = np.hstack([np.array([0]), query_pointer])
-        nr_of_queries = len(data_set)
+
+        # Free memory
+        del data_set
 
         # Generate object to return
         result = LtrDataset(feature_vectors, relevance_scores, query_pointer,
@@ -103,6 +106,10 @@ class LtrDataset(DatasetMixin):
         # If normalization is necessary, do so
         if normalize:
             result.normalize()
+
+        # Cast to float32 (after normalization) which is typical format in
+        # chainer
+        result.feature_vectors = result.feature_vectors.astype(dtype=np.float32)
 
         # Return result
         return result
