@@ -7,8 +7,10 @@ cache: pip
 
 install:
  - pip install -r requirements.txt
- - pip install nose
- - pip install coverage
+ - pip install nose coverage coveralls
 
 script:
- - nosetests -v test --with-coverage --cover-package=lace --cover-html
+ nosetests -v test --with-coverage --cover-package=lace
+
+after_success:
+  coveralls
