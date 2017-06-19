@@ -5,41 +5,17 @@ from chainer.utils import type_check
 
 class LogCumsumExp(function.Function):
 
-    def __init__(self, axis=None):
-        if axis is None:
-            self.axis = None
-        elif isinstance(axis, int):
-            self.axis = (axis,)
-        elif isinstance(axis, tuple) and all(isinstance(a, int) for a in axis):
-            if len(set(axis)) != len(axis):
-                raise ValueError('duplicate value in axis: ({})'.format(
-                    ', '.join(map(str, axis))))
-            self.axis = axis
-        else:
-            raise TypeError('None, int or tuple of int are required')
-
     def check_type_forward(self, in_types):
         type_check.expect(
             in_types.size() == 1,
             in_types[0].dtype.kind == 'f',
         )
 
-        if self.axis is not None:
-            for axis in self.axis:
-                if axis >= 0:
-                    type_check.expect(
-                        axis < in_types[0].ndim,
-                    )
-                else:
-                    type_check.expect(
-                        -axis - 1 < in_types[0].ndim,
-                    )
-
     def forward(self, inputs):
         xp = cuda.get_array_module(*inputs)
 
         x, = inputs
-        m = x.max(axis=self.axis, keepdims=True)
+        m = x.max(axis=0, keepdims=True)
         y = x - m
         xp.exp(y, out=y)
         y_sum = xp.flip(xp.cumsum(xp.flip(y, axis=0)), axis=0)
@@ -72,4 +48,4 @@ def logcumsumexp(x):
         ~chainer.Variable: Output variable.
 
     """
-    return LogCumsumExp(axis=0)(x)
+    return LogCumsumExp()(x)
