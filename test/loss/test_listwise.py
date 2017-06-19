@@ -58,15 +58,17 @@ def test_listmle_near_zero_loss():
 
 
 def test_listpl():
+    np.random.seed(4101)
     x = np.array([[3., 3., 2., 0.]]).T
     t = np.array([[0.5, 1.0, 0.3, 0.5]]).T
     loss = ListPLLoss(Identity())
 
     result = loss(x, t)
-    assert_equal(result.data, 5.545076727008247)
+    assert_equal(result.data, 3.358743050532998)
 
 
 def test_listpl_near_zero_loss():
+    np.random.seed(4101)
     x = np.array([[40., 20., 0.]]).T
     t = np.array([[40., 20., 0.]]).T
     loss = ListPLLoss(Identity())

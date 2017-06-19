@@ -4,7 +4,7 @@ from nose.tools import raises, assert_equal, assert_in, assert_not_equal, \
 from io import StringIO, BytesIO
 from lace.dataset.dataset import LtrDataset
 
-from .utils import get_dataset
+from test.dataset.utils import get_dataset
 
 
 def test_save_txt_and_load_txt():

@@ -4,7 +4,7 @@ from lace.dataset.iterator import LtrIterator
 from chainer.dataset.iterator import Iterator
 from chainer.serializers import DictionarySerializer
 
-from .utils import get_dataset
+from test.dataset.utils import get_dataset
 
 
 def test_iterations():
