@@ -1,12 +1,15 @@
 language: python
+
 python:
  - "3.6"
- - "nightly"
+
+cache: pip
 
 install:
  - pip install -r requirements.txt
  - pip install nose
  - pip install coverage
 
-script: nosetests test --coverage
+script:
+ - nosetests test --coverage
 
