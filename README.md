@@ -34,8 +34,8 @@ Currently we provide implementations for the following loss functions
 
 Here is an example script that will train up a single-layer linear neural network with a ListNet loss function:
 
-    from lace.dataset.dataset import LtrDataset
-    from lace.dataset.iterator import LtrIterator
+    from lace.dataset import LtrDataset
+    from lace.iterator import LtrIterator
     from lace.loss.listwise import ListNetLoss
     from chainer import training, optimizers, links
     from chainer.training import extensions
