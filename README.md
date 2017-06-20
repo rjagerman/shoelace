@@ -15,14 +15,14 @@ Shoelace is a neural Learning to Rank library using [Chainer](https://github.com
 
 We currently provide ability to load learning to rank datasets (SVMRank format) into chainer.
 
-    from shoelace.dataset.dataset import LtrDataset
+    from shoelace.dataset import LtrDataset
     
     with open('./dataset.txt', 'r') as file:
         dataset = LtrDataset.load_txt(file)
         
 Additionally, we provide minibatch iterators for Learning to Rank datasets. These generate variable-sized minibatches, where each minibatch represents one query and all associated query-document instances. You can additionally specify whether the iterator should repeat infinitely and/or shuffle the data on every epoch.
 
-    from shoelace.dataset.iterator import LtrIterator
+    from shoelace.iterator import LtrIterator
     
     iterator = LtrIterator(dataset, repeat=True, shuffle=True)
 
