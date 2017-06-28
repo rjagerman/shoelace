@@ -91,12 +91,10 @@ class ListPLLoss(AbstractListLoss):
                  parameterized by the target labels
         """
         xp = cuda.get_array_module(t)
-        if not hasattr(xp, 'asnumpy'):
-            xp.asnumpy = lambda x: x
         t = t[:, 0]
 
         probs = xp.exp(t * self.α)
         probs /= xp.sum(probs)
-        return np.random.choice(probs.shape[0], probs.shape[0], replace=False,
-                                p=xp.asnumpy(probs))
+        return xp.random.choice(probs.shape[0], probs.shape[0], replace=False,
+                                p=probs)
 
