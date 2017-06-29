@@ -2,10 +2,10 @@ from setuptools import setup
 
 setup(
     name='shoelace',
-    version='0.1.0',
+    version='0.2.0',
     description='Neural Learning to Rank using Chainer',
     url='https://github.com/rjagerman/shoelace',
-    download_url = 'https://github.com/rjagerman/shoelace/archive/v0.1.0.tar.gz',
+    download_url = 'https://github.com/rjagerman/shoelace/archive/v0.2.0.tar.gz',
     author='Rolf Jagerman',
     author_email='rjagerman@gmail.com',
     license='MIT',
