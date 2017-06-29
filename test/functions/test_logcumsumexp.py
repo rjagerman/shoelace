@@ -1,5 +1,5 @@
 import numpy as np
-from nose.tools import assert_equal, assert_true
+from nose.tools import assert_true
 from shoelace.functions.logcumsumexp import logcumsumexp, LogCumsumExp
 from chainer import Variable
 

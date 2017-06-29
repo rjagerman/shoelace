@@ -1,11 +1,21 @@
 import numpy as np
-from chainer import training, optimizers, links
+from chainer import training, optimizers, links, Chain
 from chainer.dataset import convert
 from nose.tools import assert_almost_equal
 
 from shoelace.iterator import LtrIterator
-from shoelace.loss.listwise import ListNetLoss
+from shoelace.loss.listwise import listnet
 from test.utils import get_dataset
+
+
+class Ranker(Chain):
+    def __init__(self, predictor, loss):
+        super(Ranker, self).__init__(predictor=predictor)
+        self.loss = loss
+
+    def __call__(self, x, t):
+        x_hat = self.predictor(x)
+        return self.loss(x_hat, t)
 
 
 def test_linear_network():
@@ -20,7 +30,7 @@ def test_linear_network():
 
     # Create neural network with chainer and apply our loss function
     predictor = links.Linear(None, 1)
-    loss = ListNetLoss(predictor)
+    loss = Ranker(predictor, listnet)
 
     # Build optimizer, updater and trainer
     optimizer = optimizers.Adam(alpha=0.2)
