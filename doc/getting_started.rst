@@ -53,9 +53,13 @@ we will use the ListNet loss (top-1 approximation):
 
 .. code-block:: python
 
-    from shoelace.loss.listwise import ListNetLoss
-    loss = ListNetLoss(predictor)
+    from chainer import Chain
+    from shoelace.loss.listwise import lisnet
 
+    class Ranker(Chain):
+        def __call__(self, x, t):
+            return listnet(self.predictor(x), t)
+    loss = Ranker(predictor=predictor)
 
 Training and evaluation
 =======================
