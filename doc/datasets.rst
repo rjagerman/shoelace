@@ -1,3 +1,5 @@
+.. _datasets-ref:
+
 ========
 Datasets
 ========
@@ -29,9 +31,6 @@ a data set with query-level normalization by setting the `normalize` parameter
 to `True`:
 
 .. code-block:: python
-   :emphasize-lines: 4
-
-    from shoelace.dataset import LtrDataset
 
     with open('./dataset.txt', 'r') as file:
         dataset = LtrDataset.load_txt(file, normalize=True)

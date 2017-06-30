@@ -17,3 +17,4 @@ data.
 
    getting_started
    datasets
+   loss_functions
