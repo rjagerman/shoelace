@@ -8,7 +8,7 @@ cache: pip
 install:
  - pip install -r requirements.txt
  - pip install nose coverage coveralls
- - pip install travis-sphinx
+ - pip install sphinx sphinxcontrib-bibtex sphinxcontrib-websupport travis-sphinx
 
 script:
  - nosetests -v test --with-coverage --cover-package=shoelace
