@@ -61,8 +61,8 @@ we will use the ListNet loss (top-1 approximation):
             return listnet(self.predictor(x), t)
     loss = Ranker(predictor=predictor)
 
-Training and evaluation
-=======================
+Training
+========
 We now have all the pieces set up to start training our network. What follows is
 standard Chainer code for setting up an optimizer, updater and trainer. There
 are many options and choices to be made here, but they fall outside the scope of
