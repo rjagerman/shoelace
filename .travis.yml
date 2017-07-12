@@ -8,9 +8,13 @@ cache: pip
 install:
  - pip install -r requirements.txt
  - pip install nose coverage coveralls
+ - pip install travis-sphinx
 
 script:
- nosetests -v test --with-coverage --cover-package=shoelace
+ - nosetests -v test --with-coverage --cover-package=shoelace
+ - travis-sphinx --source=doc build
 
 after_success:
-  coveralls
+ - coveralls
+ - travis-sphinx deploy 
+
