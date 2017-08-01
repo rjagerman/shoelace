@@ -54,7 +54,7 @@ we will use the ListNet loss (top-1 approximation):
 .. code-block:: python
 
     from chainer import Chain
-    from shoelace.loss.listwise import lisnet
+    from shoelace.loss.listwise import listnet
 
     class Ranker(Chain):
         def __call__(self, x, t):
