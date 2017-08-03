@@ -61,7 +61,7 @@ This loss function is implemented in :code:`shoelace.loss.listwise.listmle`.
 ListPL
 ------
 
-The ListPL loss function is an approximation to the cross-entropy loss of
+The ListPL :cite:`jagerman2017modeling` loss function is an approximation to the cross-entropy loss of
 ListNet. It can be seen as a stochastic variant of ListMLE where during every
 update a new permutation :math:`\pi` is drawn:
 
