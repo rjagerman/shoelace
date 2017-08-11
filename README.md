@@ -9,6 +9,12 @@ Shoelace is a neural Learning to Rank library using [Chainer](https://github.com
 
 Comprehensive documentation is available online [here](https://rjagerman.github.io/shoelace/)
 
+## Requirements
+
+    python3
+    numpy >= 1.12.0
+    chainer >= 2.0.0
+
 ## Installation
 
     pip install shoelace
