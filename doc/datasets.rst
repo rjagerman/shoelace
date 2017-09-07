@@ -47,7 +47,7 @@ experiments:
 .. code-block:: python
 
     with open('./dataset.bin', 'wb') as file:
-        dataset = LtrDataset.save(file)
+        dataset.save(file)
 
 Once saved, you can load the file again. It will be several orders of magnitude
 faster than loading the corresponding txt file:
