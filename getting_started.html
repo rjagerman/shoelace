@@ -1,0 +1,172 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Getting Started Guide &#8212; Shoelace 0.2.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Datasets" href="datasets.html" />
+    <link rel="prev" title="Welcome" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="getting-started-guide">
+<span id="getting-started-ref"></span><h1>Getting Started Guide<a class="headerlink" href="#getting-started-guide" title="Permalink to this headline">¶</a></h1>
+<p>In this guide we will go through a simple example from start to finish. You
+will learn how to load data, create an iterator, setup a neural network and
+learn its parameters using a ranking loss function.</p>
+<div class="section" id="loading-a-data-set">
+<h2>Loading a data set<a class="headerlink" href="#loading-a-data-set" title="Permalink to this headline">¶</a></h2>
+<p>We will load a very simple example data set in RankSVM format.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">shoelace.dataset</span> <span class="kn">import</span> <span class="n">LtrDataset</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;./dataset.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="nb">file</span><span class="p">:</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">LtrDataset</span><span class="o">.</span><span class="n">load_txt</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Chainer works with a concept of iterators that feed a neural network with
+batches of data. We need to load our data into a Learning to Rank iterator to
+start using it:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">shoelace.dataset</span> <span class="kn">import</span> <span class="n">LtrIterator</span>
+
+<span class="n">iterator</span> <span class="o">=</span> <span class="n">LtrIterator</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can find more detailed information about the data set loading facilities
+that Shoelace provides on the <a class="reference internal" href="datasets.html"><span class="doc">Datasets</span></a> section of the documentation.</p>
+</div>
+<div class="section" id="setting-up-a-network">
+<h2>Setting up a network<a class="headerlink" href="#setting-up-a-network" title="Permalink to this headline">¶</a></h2>
+<p>For our simple example we will set up a single-layer linear neural network. This
+is equivalent to a linear function of the input features.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">chainer</span> <span class="kn">import</span> <span class="n">links</span>
+<span class="n">predictor</span> <span class="o">=</span> <span class="n">links</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We encourage the reader to experiment with a wide variety of neural
+architectures. For more information about designing different architectures we
+refer you to the <a class="reference external" href="https://docs.chainer.org">documentation of Chainer</a>.</p>
+</div>
+<div class="section" id="choosing-a-loss-function">
+<h2>Choosing a loss function<a class="headerlink" href="#choosing-a-loss-function" title="Permalink to this headline">¶</a></h2>
+<p>Shoelace currently provides 3 different list-wise loss functions. For this guide
+we will use the ListNet loss (top-1 approximation):</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">chainer</span> <span class="kn">import</span> <span class="n">Chain</span>
+<span class="kn">from</span> <span class="nn">shoelace.loss.listwise</span> <span class="kn">import</span> <span class="n">listnet</span>
+
+<span class="k">class</span> <span class="nc">Ranker</span><span class="p">(</span><span class="n">Chain</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">listnet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predictor</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">t</span><span class="p">)</span>
+<span class="n">loss</span> <span class="o">=</span> <span class="n">Ranker</span><span class="p">(</span><span class="n">predictor</span><span class="o">=</span><span class="n">predictor</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="training">
+<h2>Training<a class="headerlink" href="#training" title="Permalink to this headline">¶</a></h2>
+<p>We now have all the pieces set up to start training our network. What follows is
+standard Chainer code for setting up an optimizer, updater and trainer. There
+are many options and choices to be made here, but they fall outside the scope of
+this guide. You will be able to find much more information about optimizing the
+network on the <a class="reference external" href="https://docs.chainer.org">documentation of Chainer</a>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">chainer</span> <span class="kn">import</span> <span class="n">training</span><span class="p">,</span> <span class="n">optimizers</span>
+<span class="kn">from</span> <span class="nn">chainer.training</span> <span class="kn">import</span> <span class="n">extensions</span>
+
+<span class="c1"># Build optimizer, updater and trainer</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">optimizers</span><span class="o">.</span><span class="n">Adam</span><span class="p">()</span>
+<span class="n">optimizer</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+<span class="n">updater</span> <span class="o">=</span> <span class="n">training</span><span class="o">.</span><span class="n">StandardUpdater</span><span class="p">(</span><span class="n">iterator</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">)</span>
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">training</span><span class="o">.</span><span class="n">Trainer</span><span class="p">(</span><span class="n">updater</span><span class="p">,</span> <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="s1">&#39;epoch&#39;</span><span class="p">))</span>
+<span class="n">trainer</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">extensions</span><span class="o">.</span><span class="n">ProgressBar</span><span class="p">())</span>
+
+<span class="c1"># Train neural network</span>
+<span class="n">trainer</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/shoelace-logo.png" title="Shoelace" />
+  </a>
+</p>
+
+<p>The Neural Learning to Rank library using Chainer. Our goal is to make it easy to do offline learning to rank experiments on annotated learning to rank data.</p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Getting Started Guide</a><ul>
+<li><a class="reference internal" href="#loading-a-data-set">Loading a data set</a></li>
+<li><a class="reference internal" href="#setting-up-a-network">Setting up a network</a></li>
+<li><a class="reference internal" href="#choosing-a-loss-function">Choosing a loss function</a></li>
+<li><a class="reference internal" href="#training">Training</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Rolf Jagerman.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/getting_started.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

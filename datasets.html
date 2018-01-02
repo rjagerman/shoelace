@@ -1,0 +1,166 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Datasets &#8212; Shoelace 0.2.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Loss Functions" href="loss_functions.html" />
+    <link rel="prev" title="Getting Started Guide" href="getting_started.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="datasets">
+<span id="datasets-ref"></span><h1>Datasets<a class="headerlink" href="#datasets" title="Permalink to this headline">¶</a></h1>
+<p>Datasets in Shoelace can be loaded either in RankSVM .txt format or a custom
+binary format. When you are just getting started, you will want to load data
+sets using RankSVM format as most data sets are available in this format.
+However, for future reference it is much faster to save and load the custom
+binary format.</p>
+<div class="section" id="ranksvm-format">
+<h2>RankSVM Format<a class="headerlink" href="#ranksvm-format" title="Permalink to this headline">¶</a></h2>
+<p>The most typical format to load a Learning to Rank data set is using RankSVM
+format. Many publicly available anotated data sets have used this format. Given
+a Learning to Rank data set called <cite>dataset.txt</cite>, you can load it as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">shoelace.dataset</span> <span class="kn">import</span> <span class="n">LtrDataset</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;./dataset.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="nb">file</span><span class="p">:</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">LtrDataset</span><span class="o">.</span><span class="n">load_txt</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Some data sets in RankSVM format do not come with query-level normalization. For
+most loss functions that depend on exponentials it is very recommended to do
+query-level normalization to prevent overflow errors. Fortunately, Shoelace has
+normalization built-in as part of the data set loading facilities. You can load
+a data set with query-level normalization by setting the <cite>normalize</cite> parameter
+to <cite>True</cite>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;./dataset.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="nb">file</span><span class="p">:</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">LtrDataset</span><span class="o">.</span><span class="n">load_txt</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="binary-format">
+<h2>Binary Format<a class="headerlink" href="#binary-format" title="Permalink to this headline">¶</a></h2>
+<p>Shoelace provides a custom binary format that is much faster to save and load
+than the RankSVM text format. Once you have loaded a dataset, you can save it
+to a binary file once, so that you can load it much faster in future
+experiments:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;./dataset.bin&#39;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="nb">file</span><span class="p">:</span>
+    <span class="n">dataset</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Once saved, you can load the file again. It will be several orders of magnitude
+faster than loading the corresponding txt file:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;./dataset.bin&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="nb">file</span><span class="p">:</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">LtrDataset</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="iterators">
+<h2>Iterators<a class="headerlink" href="#iterators" title="Permalink to this headline">¶</a></h2>
+<p>Chainer works with a concept of iterators that feed a neural network with
+batches of data. We provide an iterator specifically designed for Learning to
+Rank tasks. Such an iterator considers a single query (and all associated
+query-document pairs) as a single learning batch. This will allow us to do
+list-wise Learning to Rank by taking into account the entire ranked list for a
+given query. As a consequence, not every minibatch will have the same size,
+which is fortunately no problem for Chainer’s run-time architecture.</p>
+<p>You can load the data set into an iterator as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">shoelace.dataset</span> <span class="kn">import</span> <span class="n">LtrIterator</span>
+
+<span class="n">iterator</span> <span class="o">=</span> <span class="n">LtrIterator</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can additionally specify whether the iterator should repeat forever (e.g.
+for training data, but not for test data) and whether the order of data should
+be shuffled on every epoch:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">iterator</span> <span class="o">=</span> <span class="n">LtrIterator</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/shoelace-logo.png" title="Shoelace" />
+  </a>
+</p>
+
+<p>The Neural Learning to Rank library using Chainer. Our goal is to make it easy to do offline learning to rank experiments on annotated learning to rank data.</p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Datasets</a><ul>
+<li><a class="reference internal" href="#ranksvm-format">RankSVM Format</a></li>
+<li><a class="reference internal" href="#binary-format">Binary Format</a></li>
+<li><a class="reference internal" href="#iterators">Iterators</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Rolf Jagerman.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/datasets.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

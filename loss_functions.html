@@ -1,0 +1,175 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Loss Functions &#8212; Shoelace 0.2.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Datasets" href="datasets.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="loss-functions">
+<span id="loss-functions-ref"></span><h1>Loss Functions<a class="headerlink" href="#loss-functions" title="Permalink to this headline">¶</a></h1>
+<p>Shoelace currently provides three ranking loss functions:</p>
+<ul class="simple">
+<li>ListNet (Top-1 approximation)</li>
+<li>ListMLE</li>
+<li>ListPL</li>
+</ul>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p>The loss functions can easily be plugged into a chainer architecture. We can
+define a Chain class that uses the ListNet loss, assuming we have a network
+architecture called <code class="code docutils literal"><span class="pre">predictor</span></code>, as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">shoelace.loss.listwise</span> <span class="kn">import</span> <span class="n">listnet</span>
+<span class="kn">from</span> <span class="nn">chainer</span> <span class="kn">import</span> <span class="n">Chain</span>
+
+<span class="k">class</span> <span class="nc">Ranker</span><span class="p">(</span><span class="n">Chain</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">listnet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predictor</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">t</span><span class="p">)</span>
+
+<span class="n">loss</span> <span class="o">=</span> <span class="n">Ranker</span><span class="p">(</span><span class="n">predictor</span><span class="o">=</span><span class="n">predictor</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="listnet">
+<h2>ListNet<a class="headerlink" href="#listnet" title="Permalink to this headline">¶</a></h2>
+<p>The ListNet <a class="reference internal" href="#cao2007learning" id="id1">[CQL+07]</a> loss function is the cross-entropy between
+the probability of the labels given a permutation and the probability of the
+network scores given a permutation:</p>
+<div class="math">
+\[\mathcal{L}(f(x), y) = - \sum_{\pi \in \Omega} P(\pi \mid y) \log P(\pi \mid f(x))\]</div>
+<p>Where <span class="math">\(P(\pi \mid z)\)</span> is a Plackett-Luce probability model of permutation
+<span class="math">\(\pi\)</span> given item-specific set of scores <span class="math">\(z\)</span>. Since the set
+<span class="math">\(\Omega\)</span> has size <span class="math">\(\mathcal{O}(n!)\)</span>, it is too large to compute in
+practice. Instead, we use the top-1 approximation as in the original paper,
+which reduces to a softmax of the scores followed by a cross entropy.</p>
+<p>This loss function is implemented in <code class="code docutils literal"><span class="pre">shoelace.loss.listwise.listnet</span></code>.</p>
+</div>
+<div class="section" id="listmle">
+<h2>ListMLE<a class="headerlink" href="#listmle" title="Permalink to this headline">¶</a></h2>
+<p>The ListMLE <a class="reference internal" href="#xia2008listwise" id="id2">[XLW+08]</a> loss function is the negative probability of
+a single permutation <span class="math">\(\pi \in \{\pi \mid y_{\pi_i} \geq y_{\pi_j}; i &lt; j\}\)</span>
+of the ground truth labeling. It is defined as follows:</p>
+<div class="math">
+\[\mathcal{L}(f(x), y) = - \log P(\pi \mid f(x))\]</div>
+<p>This loss function is implemented in <code class="code docutils literal"><span class="pre">shoelace.loss.listwise.listmle</span></code>.</p>
+</div>
+<div class="section" id="listpl">
+<h2>ListPL<a class="headerlink" href="#listpl" title="Permalink to this headline">¶</a></h2>
+<p>The ListPL <a class="reference internal" href="#jagerman2017modeling" id="id3">[JKdR17]</a> loss function is an approximation to the cross-entropy loss of
+ListNet. It can be seen as a stochastic variant of ListMLE where during every
+update a new permutation <span class="math">\(\pi\)</span> is drawn:</p>
+<div class="math">
+\[\begin{split}\mathcal{L}(f(x), y) = - \log P(\pi \mid f(x)) \\
+\pi \sim P(\pi \mid y)\end{split}\]</div>
+<p>This loss function is implemented in <code class="code docutils literal"><span class="pre">shoelace.loss.listwise.listpl</span></code>.</p>
+<p class="rubric">References</p>
+<p id="bibtex-bibliography-loss_functions-0"><table class="docutils citation" frame="void" id="cao2007learning" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[CQL+07]</a></td><td>Zhe Cao, Tao Qin, Tie-Yan Liu, Ming-Feng Tsai, and Hang Li. Learning to rank: from pairwise approach to listwise approach. In <em>Proceedings of the 24th international conference on Machine learning</em>, 129–136. ACM, 2007.</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="jagerman2017modeling" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[JKdR17]</a></td><td>Rolf Jagerman, Julia Kiseleva, and Maarten de&nbsp;Rijke. Modeling label ambiguity for neural list-wise learning to rank. <em>arXiv preprint arXiv:1707.07493</em>, 2017.</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="xia2008listwise" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[XLW+08]</a></td><td>Fen Xia, Tie-Yan Liu, Jue Wang, Wensheng Zhang, and Hang Li. Listwise approach to learning to rank: theory and algorithm. In <em>Proceedings of the 25th international conference on Machine learning</em>, 1192–1199. ACM, 2008.</td></tr>
+</tbody>
+</table>
+</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/shoelace-logo.png" title="Shoelace" />
+  </a>
+</p>
+
+<p>The Neural Learning to Rank library using Chainer. Our goal is to make it easy to do offline learning to rank experiments on annotated learning to rank data.</p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Loss Functions</a><ul>
+<li><a class="reference internal" href="#usage">Usage</a></li>
+<li><a class="reference internal" href="#listnet">ListNet</a></li>
+<li><a class="reference internal" href="#listmle">ListMLE</a></li>
+<li><a class="reference internal" href="#listpl">ListPL</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Rolf Jagerman.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/loss_functions.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
