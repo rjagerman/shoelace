@@ -1,3 +1,4 @@
+import numpy as np
 import chainer.functions as F
 from chainer import cuda
 from shoelace.functions.logcumsumexp import logcumsumexp
@@ -7,8 +8,8 @@ def listmle(x, t):
     """
     The ListMLE loss as in Xia et al (2008), Listwise Approach to Learning to
     Rank - Theory and Algorithm.
-    
-    :param x: The activation of the previous layer 
+
+    :param x: The activation of the previous layer
     :param t: The target labels
     :return: The loss
     """
@@ -27,8 +28,8 @@ def listnet(x, t):
     """
     The Top-1 approximated ListNet loss as in Cao et al (2006), Learning to
     Rank: From Pairwise Approach to Listwise Approach
-    
-    :param x: The activation of the previous layer 
+
+    :param x: The activation of the previous layer
     :param t: The target labels
     :return: The loss
     """
@@ -43,8 +44,8 @@ def listpl(x, t, α=15.0):
     """
     The ListPL loss, a stochastic variant of ListMLE that in expectation
     approximates the true ListNet loss.
-    
-    :param x: The activation of the previous layer 
+
+    :param x: The activation of the previous layer
     :param t: The target labels
     :param α: The smoothing factor
     :return: The loss
@@ -63,7 +64,7 @@ def _pl_sample(t, α):
     """
     Sample from the plackett luce distribution directly
 
-    :param t: The target labels 
+    :param t: The target labels
     :return: A random permutation from the plackett-luce distribution
              parameterized by the target labels
     """
@@ -72,5 +73,11 @@ def _pl_sample(t, α):
 
     probs = xp.exp(t * α)
     probs /= xp.sum(probs)
-    return xp.random.choice(probs.shape[0], probs.shape[0], replace=False,
-                            p=probs)
+
+    # Use CPU-based numpy implementation, because cupy.random.choice with
+    # replace=False does not work
+    probs = cuda.to_cpu(probs)
+    result = np.random.choice(probs.shape[0], probs.shape[0], replace=False,
+                              p=probs)
+    return xp.array(result, copy=False)
+
