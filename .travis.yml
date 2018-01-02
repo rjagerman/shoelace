@@ -12,7 +12,7 @@ install:
 
 script:
  - nosetests -v test --with-coverage --cover-package=shoelace
- - travis-sphinx --source=doc build
+ - travis-sphinx build --source=doc
 
 after_success:
  - coveralls
