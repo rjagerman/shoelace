@@ -3,6 +3,8 @@
 [![Build Status](https://travis-ci.org/rjagerman/shoelace.svg?branch=master)](https://travis-ci.org/rjagerman/shoelace)
 [![Coverage Status](https://coveralls.io/repos/github/rjagerman/shoelace/badge.svg?branch=master)](https://coveralls.io/github/rjagerman/shoelace?branch=master)
 
+:warning: This library has been deprecated and archived in favor of [https://github.com/rjagerman/pytorchltr](https://github.com/rjagerman/pytorchltr).
+
 Shoelace is a neural Learning to Rank library using [Chainer](https://github.com/chainer/chainer). The goal is to make it easy to do offline learning to rank experiments on annotated learning to rank data.
 
 ## Documentation
